@@ -1,0 +1,5 @@
+[run]
+source = trytond.modules.items_waiting_shipment
+
+[report]
+omit = */tests/*, */setup.py
