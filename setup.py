@@ -84,7 +84,7 @@ requires = []
 
 MODULE2PREFIX = {}
 
-MODULE = "items_waiting_shipment"
+MODULE = "waiting_customer_shipment_report"
 PREFIX = "openlabs"
 for dep in info.get('depends', []):
     if not re.match(r'(ir|res|webdav)(\W|$)', dep):
@@ -97,6 +97,12 @@ for dep in info.get('depends', []):
         )
 requires.append(
     'trytond >= %s.%s, < %s.%s' % (
+        major_version, minor_version, major_version, minor_version + 1
+    )
+)
+
+requires.append(
+    'openlabs_report_webkit >= %s.%s, < %s.%s' % (
         major_version, minor_version, major_version, minor_version + 1
     )
 )
@@ -113,10 +119,12 @@ setup(
         'trytond.modules.%s.tests' % MODULE,
     ],
     package_data={
-        'trytond.modules.%s' % MODULE: info.get('xml', [])
-        + info.get('translation', [])
-        + ['tryton.cfg', 'locale/*.po', 'tests/*.rst', 'reports/*.odt']
-        + ['view/*.xml'],
+        'trytond.modules.%s' % MODULE: info.get('xml', []) +
+        info.get('translation', []) +
+        ['tryton.cfg', 'locale/*.po', 'tests/*.rst', 'reports/*.odt'] +
+        ['view/*.xml', 'reports/*.html', 'reports/css/bootstrap/css/*'] +
+        ['reports/css/bootstrap/fonts/*', 'reports/css/font-awesome/css/*'] +
+        ['reports/css/font-awesome/fonts/*']
     },
     classifiers=[
         'Development Status :: 4 - Beta',

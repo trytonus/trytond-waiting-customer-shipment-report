@@ -6,9 +6,20 @@
     :license: BSD, see LICENSE for more details.
 """
 from trytond.pool import Pool
+from shipment import ItemsWaitingShipmentReport, ItemsWaitingShipmentStart, \
+    ItemsWaitingShipmentReportWizard
 
 
 def register():
     Pool.register(
-        module='items_waiting_shipment', type_='model'
+        ItemsWaitingShipmentStart,
+        module='waiting_customer_shipment_report', type_='model'
+    )
+    Pool.register(
+        ItemsWaitingShipmentReport,
+        module='waiting_customer_shipment_report', type_='report'
+    )
+    Pool.register(
+        ItemsWaitingShipmentReportWizard,
+        module='waiting_customer_shipment_report', type_='wizard'
     )
