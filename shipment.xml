@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<tryton>
+    <data>
+        <record model="ir.action.report" id="report_items_waiting_shipment">
+            <field name="name">Items Waiting Shipment</field>
+            <field name="model"></field>
+            <field name="report_name">report.items_waiting_shipment</field>
+            <field name="report">waiting_customer_shipment_report/reports/items_waiting_shipment.html</field>
+        </record>
+        <record model="ir.ui.view" id="items_waiting_shipments_start_view_form">
+            <field name="model">report.items_waiting_shipment_wizard.start</field>
+            <field name="type">form</field>
+            <field name="name">items_waiting_shipments_start_form</field>
+        </record>
+        <record model="ir.action.wizard" id="items_waiting_shipment_wizard">
+            <field name="name">Items Waiting Shipment</field>
+            <field name="wiz_name">report.items_waiting_shipment_wizard</field>
+        </record>
+        <menuitem parent="stock.menu_stock"
+            action="items_waiting_shipment_wizard"
+            id="menu_items_waiting_shipment_report" icon="tryton-spreadsheet"
+            sequence="100"/>
+    </data>
+</tryton>

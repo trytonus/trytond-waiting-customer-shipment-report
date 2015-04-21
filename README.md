@@ -1,1 +1,0 @@
-# trytond-items-waiting-shipment

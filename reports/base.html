@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="author" content="Openlabs Technologies & Consulting (P) Ltd.">
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="{{ 'waiting_customer_shipment_report/reports/css/bootstrap/css/bootstrap.min.css'|modulepath }}">
+    <link rel="stylesheet" href="{{ 'waiting_customer_shipment_report/reports/css/font-awesome/css/font-awesome.min.css'|modulepath }}">
+    <link href='http://fonts.googleapis.com/css?family=Lora' rel='stylesheet' type='text/css'>
+    <style type="text/css">
+      {% block style %}
+        .page-break {
+          padding-top: 10px;
+          page-break-before: always;
+        }
+        hr {
+          border-top: 1px solid #000;
+        }
+        .h1 {
+          font-size: 24px;
+        }
+        .h2 {
+          font-size: 22px;
+        }
+        .h3 {
+          font-size: 18px;
+        }
+        .h4 {
+          font-size: 16px;
+        }
+        .h5 {
+          font-size: 12px;
+        }
+        .h6 {
+          font-size: 10px;
+        }
+        .body {
+          font-family: 'Lora', serif;
+          font-size: 10px;
+        }
+        tbody tr {
+          page-break-inside: avoid;
+        }
+      {% endblock %}
+    </style>
+  </head>
+  <body>
+    {% block main %}{% endblock %}
+  </body>
+</html>
