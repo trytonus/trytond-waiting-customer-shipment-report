@@ -124,7 +124,7 @@ setup(
         ['tryton.cfg', 'locale/*.po', 'tests/*.rst', 'reports/*.odt'] +
         ['view/*.xml', 'reports/*.html', 'reports/css/bootstrap/css/*'] +
         ['reports/css/bootstrap/fonts/*', 'reports/css/font-awesome/css/*'] +
-        ['reports/css/font-awesome/fonts/*']
+        ['reports/css/font-awesome/fonts/*', 'reports/js/*.js']
     },
     classifiers=[
         'Development Status :: 4 - Beta',

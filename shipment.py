@@ -72,6 +72,7 @@ class ItemsWaitingShipmentReport(ReportMixin):
 
         localcontext.update({
             'shipments_by_products': shipments_by_products,
+            'report_ext': report.extension,
         })
         return super(ItemsWaitingShipmentReport, cls).parse(
             report, records, data, localcontext
