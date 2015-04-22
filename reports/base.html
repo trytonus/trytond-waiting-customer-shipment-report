@@ -46,8 +46,10 @@
         }
       {% endblock %}
     </style>
+    <script type="text/javascript" src="{{ 'waiting_customer_shipment_report/reports/js/jquery-1.11.2.min.js'|modulepath }}"></script>
   </head>
   <body>
     {% block main %}{% endblock %}
+    {% block scripts %}{% endblock %}
   </body>
 </html>
