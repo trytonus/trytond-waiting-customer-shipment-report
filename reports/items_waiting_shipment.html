@@ -34,7 +34,7 @@
       {% for product, shipments in shipments_by_products.iteritems() %}
         <table class="table">
           <tbody>
-            <tr class="success">
+            <tr class="success product-bar">
               <td>
                 <b>Product:</b> {{ product.name }}
               </td>
@@ -45,23 +45,27 @@
                 <b>Oldest Date</b> {{ shipments|oldest_date }}
               </td>
             </tr>
-            <tr>
+            <tr class="shipments-row">
               <td colspan="3">
                 <div class="row">
-                  <div class="col-xs-8 col-xs-offset-1">
+                  <div class="col-xs-10 col-xs-offset-1">
                     <table class="table table-condensed">
                       <thead>
                         <th>Shipment</th>
+                        <th>Customer</th>
                         <th>Planned Date</th>
-                        <th>Quantity</th>
+                        <th class="text-right">Quantity</th>
+                        <th class="text-right">State</th>
                       </thead>
                       <tbody>
                         {% for shipment in shipments|sort(attribute='planned_date') %}
                           <tr>
                             {% set quantity, uom, unit_digits = product|product_quantity(shipment) %}
                             <td>{{ shipment.code or '-' }}</td>
+                            <td>{{ shipment.customer.name }}</td>
                             <td>{{ shipment.planned_date }}</td>
-                            <td>{{ formatLang(quantity, shipment.customer.lang, unit_digits) }}</td>
+                            <td class="text-right">{{ formatLang(quantity, shipment.customer.lang, unit_digits) }}</td>
+                            <td class="text-capitalize text-right">{{ shipment.state }}</td>
                           </tr>
                         {% endfor %}
                       </tbody>
@@ -76,4 +80,18 @@
     </div>
   </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      var report_ext = "{{ report_ext }}";
+      if (report_ext == "html") {
+        $(".shipments-row").hide();
+      }
+    });
+    $(".product-bar").click(function() {
+      $(this).siblings(".shipments-row").toggle();
+    });
+  </script>
 {% endblock %}
