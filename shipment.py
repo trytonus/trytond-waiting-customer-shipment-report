@@ -63,15 +63,15 @@ class ItemsWaitingShipmentReport(ReportMixin):
 
         domain = [('state', 'in', ['assigned', 'waiting'])]
         shipments = ShipmentOut.search(domain)
-        shipments_by_products = {}
+        moves_by_products = {}
 
         for shipment in shipments:
             for move in shipment.inventory_moves:
-                shipments_by_products.setdefault(
-                    move.product, []).append(shipment)
+                moves_by_products.setdefault(
+                    move.product, []).append(move)
 
         localcontext.update({
-            'shipments_by_products': shipments_by_products,
+            'moves_by_products': moves_by_products,
             'report_ext': report.extension,
         })
         return super(ItemsWaitingShipmentReport, cls).parse(
@@ -82,22 +82,8 @@ class ItemsWaitingShipmentReport(ReportMixin):
     def get_jinja_filters(cls):
         rv = super(ItemsWaitingShipmentReport, cls).get_jinja_filters()
 
-        def get_product_quantity_in_shipment(product, shipment):
-            """
-            Returns the quantity of the product in the shipment
-            """
-            quantity = 0.0
-
-            for move in shipment.inventory_moves:
-                if move.product == product:
-                    quantity += move.quantity
-                    uom = move.uom
-                    unit_digits = move.unit_digits
-            return (quantity, uom, unit_digits)
-
-        rv['oldest_date'] = lambda shipments: sorted(
-            shipments, key=lambda s: s.planned_date)[0].planned_date
-        rv['product_quantity'] = get_product_quantity_in_shipment
+        rv['oldest_date'] = lambda moves: sorted(
+            moves, key=lambda m: m.planned_date)[0].planned_date
         return rv
 
 
