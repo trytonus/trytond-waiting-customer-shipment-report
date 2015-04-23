@@ -31,7 +31,7 @@
   </div>
   <div class="row">
     <div class="col-xs-12">
-      {% for product, shipments in shipments_by_products.iteritems() %}
+      {% for product, moves in moves_by_products.iteritems() %}
         <table class="table">
           <tbody>
             <tr class="success product-bar">
@@ -42,7 +42,7 @@
                 <b>SKU:</b> {{ product.code or '-' }}
               </td>
               <td>
-                <b>Oldest Date</b> {{ shipments|oldest_date }}
+                <b>Oldest Date</b> {{ moves|oldest_date }}
               </td>
             </tr>
             <tr class="shipments-row">
@@ -58,14 +58,13 @@
                         <th class="text-right">State</th>
                       </thead>
                       <tbody>
-                        {% for shipment in shipments|sort(attribute='planned_date') %}
+                        {% for move in moves|sort(attribute='planned_date') %}
                           <tr>
-                            {% set quantity, uom, unit_digits = product|product_quantity(shipment) %}
-                            <td>{{ shipment.code or '-' }}</td>
-                            <td>{{ shipment.customer.name }}</td>
-                            <td>{{ shipment.planned_date }}</td>
-                            <td class="text-right">{{ formatLang(quantity, shipment.customer.lang, unit_digits) }}</td>
-                            <td class="text-capitalize text-right">{{ shipment.state }}</td>
+                            <td>{{ move.shipment.code or '-' }}</td>
+                            <td>{{ move.shipment.customer.name }}</td>
+                            <td>{{ move.planned_date }}</td>
+                            <td class="text-right">{{ formatLang(move.quantity, move.shipment.customer.lang, move.unit_digits) }}</td>
+                            <td class="text-capitalize text-right">{{ move.state }}</td>
                           </tr>
                         {% endfor %}
                       </tbody>
