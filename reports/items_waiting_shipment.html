@@ -35,13 +35,13 @@
         <table class="table">
           <tbody>
             <tr class="success product-bar">
-              <td>
+              <td class="col-xs-4">
                 <b>Product:</b> {{ product.name }}
               </td>
-              <td>
+              <td class="col-xs-4">
                 <b>SKU:</b> {{ product.code or '-' }}
               </td>
-              <td>
+              <td class="col-xs-4">
                 <b>Oldest Date</b> {{ moves|oldest_date }}
               </td>
             </tr>
