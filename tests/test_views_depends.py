@@ -28,7 +28,8 @@ class TestViewsDepends(unittest.TestCase):
         Set up data used in the tests.
         this method is called before each test function execution.
         """
-        trytond.tests.test_tryton.install_module('waiting_customer_shipment_report')
+        trytond.tests.test_tryton.install_module(
+            'waiting_customer_shipment_report')
 
     def test0005views(self):
         '''
