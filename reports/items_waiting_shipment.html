@@ -35,14 +35,17 @@
         <table class="table">
           <tbody>
             <tr class="success product-bar">
-              <td class="col-xs-4">
+              <td class="col-xs-3">
                 <b>Product:</b> {{ product.name }}
               </td>
-              <td class="col-xs-4">
+              <td class="col-xs-3">
                 <b>SKU:</b> {{ product.code or '-' }}
               </td>
-              <td class="col-xs-4">
-                <b>Oldest Date</b> {{ moves|oldest_date }}
+              <td class="col-xs-3">
+                <b>Oldest Date:</b> {{ moves|oldest_date }}
+              </td>
+              <td class="col-xs-3">
+                <b>Available Quantity:</b> {{ formatLang(product_quantities[product.id], user.lang, product.default_uom.digits or 2) }}
               </td>
             </tr>
             <tr class="shipments-row">

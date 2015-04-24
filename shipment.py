@@ -5,8 +5,7 @@
     :copyright: (c) 2015 by Openlabs Technologies & Consulting (P) Limited
     :license: BSD, see LICENSE for more details.
 """
-from decimal import Decimal
-from itertools import groupby
+from collections import defaultdict
 from openlabs_report_webkit import ReportWebkit
 
 from trytond.pool import Pool
@@ -60,19 +59,42 @@ class ItemsWaitingShipmentReport(ReportMixin):
     @classmethod
     def parse(cls, report, records, data, localcontext):
         ShipmentOut = Pool().get('stock.shipment.out')
+        StockLocation = Pool().get('stock.location')
+        Date = Pool().get('ir.date')
+        Product = Pool().get('product.product')
 
         domain = [('state', 'in', ['assigned', 'waiting'])]
         shipments = ShipmentOut.search(domain)
         moves_by_products = {}
+        product_quantities = defaultdict(int)
 
         for shipment in shipments:
             for move in shipment.inventory_moves:
                 moves_by_products.setdefault(
                     move.product, []).append(move)
 
+        warehouses = StockLocation.search([
+            ('type', '=', 'warehouse'),
+        ])
+        products = moves_by_products.keys()
+        with Transaction().set_context(
+            stock_skip_warehouse=True,
+            stock_date_end=Date.today(),
+            stock_assign=True,
+        ):
+            pbl = Product.products_by_location(
+                location_ids=map(int, warehouses),
+                product_ids=map(int, products),
+            )
+
+            for key, qty in pbl.iteritems():
+                _, product_id = key
+                product_quantities[product_id] += qty
+
         localcontext.update({
             'moves_by_products': moves_by_products,
             'report_ext': report.extension,
+            'product_quantities': product_quantities,
         })
         return super(ItemsWaitingShipmentReport, cls).parse(
             report, records, data, localcontext
