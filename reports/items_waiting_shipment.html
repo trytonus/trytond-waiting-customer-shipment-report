@@ -38,18 +38,26 @@
               <td class="col-xs-3">
                 <b>Product:</b> {{ product.name }}
               </td>
-              <td class="col-xs-3">
+              <td class="col-xs-2">
                 <b>SKU:</b> {{ product.code or '-' }}
               </td>
-              <td class="col-xs-3">
+              <td class="col-xs-2">
                 <b>Oldest Date:</b> {{ moves|oldest_date }}
               </td>
-              <td class="col-xs-3">
-                <b>Available Quantity:</b> {{ formatLang(product_quantities[product.id], user.lang, product.default_uom.digits or 2) }}
+              <td class="col-xs-5">
+                <div class="col-xs-4">
+                  <b>Available:</b> {{ formatLang(product_quantities[product.id], user.lang, product.default_uom.digits or 2) }}
+                </div>
+                <div class="col-xs-4">
+                  <b>Assigned:</b> {{ formatLang(moves|quantity_in_state('assigned'), user.lang, product.default_uom.digits or 2) }}            
+                </div>              
+                <div class="col-xs-4">
+                  <b>Draft:</b> {{ formatLang(moves|quantity_in_state('draft'), user.lang, product.default_uom.digits or 2) }}
+                </div>
               </td>
             </tr>
             <tr class="shipments-row">
-              <td colspan="3">
+              <td colspan="5">
                 <div class="row">
                   <div class="col-xs-10 col-xs-offset-1">
                     <table class="table table-condensed">
