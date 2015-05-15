@@ -106,6 +106,9 @@ class ItemsWaitingShipmentReport(ReportMixin):
 
         rv['oldest_date'] = lambda moves: sorted(
             moves, key=lambda m: m.planned_date)[0].planned_date
+        rv['quantity_in_state'] = lambda moves, state: sum(
+            [m.quantity for m in moves if m.state == state]
+        )
         return rv
 
 
