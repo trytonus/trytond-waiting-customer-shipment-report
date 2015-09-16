@@ -69,7 +69,7 @@
                         <th class="text-right">State</th>
                       </thead>
                       <tbody>
-                        {% for move in moves|sort(attribute='planned_date') %}
+                        {% for move in moves|sort_by_planned_date %}
                           <tr>
                             <td>{{ move.shipment.code or '-' }}</td>
                             <td>{{ move.shipment.customer.name }}</td>
