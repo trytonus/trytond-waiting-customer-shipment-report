@@ -93,6 +93,8 @@ class ItemsWaitingShipmentReport(ReportMixin):
 
         localcontext.update({
             'moves_by_products': moves_by_products,
+            # TODO: Report is already available on context
+            # Use that and remove this context variable
             'report_ext': report.extension,
             'product_quantities': product_quantities,
         })
