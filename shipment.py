@@ -57,9 +57,20 @@ class ItemsWaitingShipmentReport(ReportMixin):
     __name__ = 'report.items_waiting_shipment'
 
     @classmethod
+    def get_warehouses(cls):
+        """
+        Return the warehouses for which the inventory should be considered
+        as could be used for fulfilling orders.
+        """
+        StockLocation = Pool().get('stock.location')
+        
+        return StockLocation.search([
+            ('type', '=', 'warehouse'),
+        ])
+
+    @classmethod
     def parse(cls, report, records, data, localcontext):
         ShipmentOut = Pool().get('stock.shipment.out')
-        StockLocation = Pool().get('stock.location')
         Date = Pool().get('ir.date')
         Product = Pool().get('product.product')
 
@@ -73,9 +84,7 @@ class ItemsWaitingShipmentReport(ReportMixin):
                 moves_by_products.setdefault(
                     move.product, []).append(move)
 
-        warehouses = StockLocation.search([
-            ('type', '=', 'warehouse'),
-        ])
+        warehouses = cls.get_warehouses()
         products = moves_by_products.keys()
         with Transaction().set_context(
             stock_skip_warehouse=True,
