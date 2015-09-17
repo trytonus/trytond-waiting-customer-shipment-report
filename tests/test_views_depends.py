@@ -31,6 +31,7 @@ class TestViewsDepends(unittest.TestCase):
         trytond.tests.test_tryton.install_module(
             'waiting_customer_shipment_report')
 
+    @unittest.skip("No views yet!")
     def test0005views(self):
         '''
         Test views.
