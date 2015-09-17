@@ -57,9 +57,20 @@ class ItemsWaitingShipmentReport(ReportMixin):
     __name__ = 'report.items_waiting_shipment'
 
     @classmethod
+    def get_warehouses(cls):
+        """
+        Return the warehouses for which the inventory should be considered
+        as could be used for fulfilling orders.
+        """
+        StockLocation = Pool().get('stock.location')
+        
+        return StockLocation.search([
+            ('type', '=', 'warehouse'),
+        ])
+
+    @classmethod
     def parse(cls, report, records, data, localcontext):
         ShipmentOut = Pool().get('stock.shipment.out')
-        StockLocation = Pool().get('stock.location')
         Date = Pool().get('ir.date')
         Product = Pool().get('product.product')
 
@@ -73,9 +84,7 @@ class ItemsWaitingShipmentReport(ReportMixin):
                 moves_by_products.setdefault(
                     move.product, []).append(move)
 
-        warehouses = StockLocation.search([
-            ('type', '=', 'warehouse'),
-        ])
+        warehouses = cls.get_warehouses()
         products = moves_by_products.keys()
         with Transaction().set_context(
             stock_skip_warehouse=True,
@@ -93,6 +102,8 @@ class ItemsWaitingShipmentReport(ReportMixin):
 
         localcontext.update({
             'moves_by_products': moves_by_products,
+            # TODO: Report is already available on context
+            # Use that and remove this context variable
             'report_ext': report.extension,
             'product_quantities': product_quantities,
         })
@@ -102,10 +113,21 @@ class ItemsWaitingShipmentReport(ReportMixin):
 
     @classmethod
     def get_jinja_filters(cls):
+        Date = Pool().get('ir.date')
+        today = Date.today()
         rv = super(ItemsWaitingShipmentReport, cls).get_jinja_filters()
 
-        rv['oldest_date'] = lambda moves: sorted(
-            moves, key=lambda m: m.planned_date)[0].planned_date
+        planned_date_sort_fn = lambda moves: sorted(
+            moves, key=lambda m: m.planned_date or today
+        )
+
+        rv['sort_by_planned_date'] = planned_date_sort_fn
+        # TODO: This finds the oldest one by sorting through ARs. This
+        # should be replaced with a search by min and then injected to
+        # local context.
+        rv['oldest_date'] = lambda moves: planned_date_sort_fn(
+            moves
+        )[0].planned_date
         rv['quantity_in_state'] = lambda moves, state: sum(
             [m.quantity for m in moves if m.state == state]
         )
