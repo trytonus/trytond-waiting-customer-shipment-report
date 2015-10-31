@@ -57,13 +57,13 @@ class ItemsWaitingShipmentReport(ReportMixin):
     __name__ = 'report.items_waiting_shipment'
 
     @classmethod
-    def get_warehouses(cls):
+    def get_warehouses(cls, data):
         """
         Return the warehouses for which the inventory should be considered
         as could be used for fulfilling orders.
         """
         StockLocation = Pool().get('stock.location')
-        
+
         return StockLocation.search([
             ('type', '=', 'warehouse'),
         ])
@@ -84,7 +84,7 @@ class ItemsWaitingShipmentReport(ReportMixin):
                 moves_by_products.setdefault(
                     move.product, []).append(move)
 
-        warehouses = cls.get_warehouses()
+        warehouses = cls.get_warehouses(data)
         products = moves_by_products.keys()
         with Transaction().set_context(
             stock_skip_warehouse=True,
@@ -151,7 +151,14 @@ class ItemsWaitingShipmentReportWizard(Wizard):
         ]
     )
     generate = StateAction(
-        'waiting_customer_shipment_report.report_items_waiting_shipment')
+        'waiting_customer_shipment_report.report_items_waiting_shipment'
+    )
 
-    def transition_generate(self):
+    def do_generate(self, action):  # noqa
+        """
+        Add data to report
+        """
+        return action, {}
+
+    def transition_generate(self):  # noqa
         return 'end'
