@@ -68,7 +68,7 @@ class ItemsWaitingShipmentReport(ReportMixin):
         ])
 
     @classmethod
-    def parse(cls, report, records, data, localcontext):
+    def get_context(cls, report, records, data):
         ShipmentOut = Pool().get('stock.shipment.out')
         Date = Pool().get('ir.date')
         Product = Pool().get('product.product')
@@ -98,17 +98,17 @@ class ItemsWaitingShipmentReport(ReportMixin):
             for key, qty in pbl.iteritems():
                 _, product_id = key
                 product_quantities[product_id] += qty
-
-        localcontext.update({
+        report_context = super(ItemsWaitingShipmentReport, cls).get_context(
+            report, records, data
+        )
+        report_context.update({
             'moves_by_products': moves_by_products,
             # TODO: Report is already available on context
             # Use that and remove this context variable
             'report_ext': report.extension,
             'product_quantities': product_quantities,
         })
-        return super(ItemsWaitingShipmentReport, cls).parse(
-            report, records, data, localcontext
-        )
+        return report_context
 
     @classmethod
     def get_jinja_filters(cls):
@@ -116,9 +116,10 @@ class ItemsWaitingShipmentReport(ReportMixin):
         today = Date.today()
         rv = super(ItemsWaitingShipmentReport, cls).get_jinja_filters()
 
-        planned_date_sort_fn = lambda moves: sorted(
-            moves, key=lambda m: m.planned_date or today
-        )
+        def planned_date_sort_fn(moves):
+            return sorted(
+                moves, key=lambda m: m.planned_date or today
+            )
 
         rv['sort_by_planned_date'] = planned_date_sort_fn
         # TODO: This finds the oldest one by sorting through ARs. This
