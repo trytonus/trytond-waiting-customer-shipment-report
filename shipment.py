@@ -68,11 +68,14 @@ class ItemsWaitingShipmentReport(ReportMixin):
         ])
 
     @classmethod
-    def parse(cls, report, records, data, localcontext):
+    def get_context(cls, records, data):
         ShipmentOut = Pool().get('stock.shipment.out')
         Date = Pool().get('ir.date')
         Product = Pool().get('product.product')
 
+        report_context = super(ItemsWaitingShipmentReport, cls).get_context(
+            records, data
+        )
         domain = [('state', 'in', ['assigned', 'waiting'])]
         shipments = ShipmentOut.search(domain)
         moves_by_products = {}
@@ -99,16 +102,13 @@ class ItemsWaitingShipmentReport(ReportMixin):
                 _, product_id = key
                 product_quantities[product_id] += qty
 
-        localcontext.update({
+        report_context.update({
             'moves_by_products': moves_by_products,
             # TODO: Report is already available on context
             # Use that and remove this context variable
-            'report_ext': report.extension,
             'product_quantities': product_quantities,
         })
-        return super(ItemsWaitingShipmentReport, cls).parse(
-            report, records, data, localcontext
-        )
+        return report_context
 
     @classmethod
     def get_jinja_filters(cls):
