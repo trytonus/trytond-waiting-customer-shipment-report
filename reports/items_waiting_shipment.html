@@ -95,7 +95,7 @@
 {% block scripts %}
   <script type="text/javascript">
     $(document).ready(function(){
-      var report_ext = "{{ report_ext }}";
+      var report_ext = "{{ report.extension }}";
       if (report_ext == "html") {
         $(".shipments-row").hide();
       }
