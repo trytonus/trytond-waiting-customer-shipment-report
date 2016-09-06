@@ -46,13 +46,13 @@
               </td>
               <td class="col-xs-5">
                 <div class="col-xs-4">
-                  <b>Available:</b> {{ formatLang(product_quantities[product.id], user.lang, product.default_uom.digits or 2) }}
+                  <b>Available:</b> {{ format_number(product_quantities[product.id], user.lang, product.default_uom.digits or 2) }}
                 </div>
                 <div class="col-xs-4">
-                  <b>Assigned:</b> {{ formatLang(moves|quantity_in_state('assigned'), user.lang, product.default_uom.digits or 2) }}            
-                </div>              
+                  <b>Assigned:</b> {{ format_number(moves|quantity_in_state('assigned'), user.lang, product.default_uom.digits or 2) }}
+                </div>
                 <div class="col-xs-4">
-                  <b>Draft:</b> {{ formatLang(moves|quantity_in_state('draft'), user.lang, product.default_uom.digits or 2) }}
+                  <b>Draft:</b> {{ format_number(moves|quantity_in_state('draft'), user.lang, product.default_uom.digits or 2) }}
                 </div>
               </td>
             </tr>
@@ -74,7 +74,7 @@
                             <td>{{ move.shipment.code or '-' }}</td>
                             <td>{{ move.shipment.customer.name }}</td>
                             <td>{{ move.planned_date }}</td>
-                            <td class="text-right">{{ formatLang(move.quantity, move.shipment.customer.lang, move.unit_digits) }}</td>
+                            <td class="text-right">{{ format_number(move.quantity, move.shipment.customer.lang, move.unit_digits) }}</td>
                             <td class="text-capitalize text-right">{{ move.state }}</td>
                           </tr>
                         {% endfor %}
